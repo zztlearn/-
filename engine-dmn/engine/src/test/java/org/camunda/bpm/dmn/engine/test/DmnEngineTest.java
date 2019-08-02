@@ -78,10 +78,19 @@ public abstract class DmnEngineTest {
     return dmnEngine.evaluateDecisionTable(decision, variables);
   }
 
+  public DmnDecisionTableResult evaluateDecisionTable(DmnEngine engine) {
+    return engine.evaluateDecisionTable(decision, variables);
+  }
+
   // assertions ///////////////////////////////////////////////////////////////
 
   public DmnDecisionTableResultAssert assertThatDecisionTableResult() {
-    DmnDecisionTableResult results = evaluateDecisionTable();
+    DmnDecisionTableResult results = evaluateDecisionTable(dmnEngine);
+    return assertThat(results);
+  }
+
+  public DmnDecisionTableResultAssert assertThatDecisionTableResult(DmnEngine engine) {
+    DmnDecisionTableResult results = evaluateDecisionTable(engine);
     return assertThat(results);
   }
 
