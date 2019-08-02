@@ -16,6 +16,7 @@
 
   <properties>
     <version.juel>2.2.7</version.juel>
+    <version.java>1.8</version.java>
   </properties>
 
   <dependencyManagement>
