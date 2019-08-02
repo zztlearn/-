@@ -16,13 +16,21 @@
  */
 package org.camunda.bpm.dmn.engine.el;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+
 import org.camunda.bpm.dmn.engine.DmnEngineConfiguration;
 import org.camunda.bpm.dmn.engine.impl.DefaultDmnEngineConfiguration;
+import org.camunda.bpm.dmn.engine.test.DecisionResource;
 import org.camunda.bpm.dmn.engine.test.DmnEngineTest;
+import org.camunda.bpm.dmn.feel.impl.FeelException;
 import org.camunda.feel.integration.CamundaFeelEngineFactory;
+import org.junit.Test;
 
 public class ScalaFeelLegacyTest extends DmnEngineTest {
 
+  protected static final String FEEL_TEST_DMN = "FeelTest.dmn";
+  protected static final String EMPTY_EXPRESSIONS_DMN = "org/camunda/bpm/dmn/engine/el/ExpressionLanguageTest.emptyExpressions.dmn";
   protected static final String DMN = "org/camunda/bpm/dmn/engine/el/FeelIntegrationTest.dmn";
   protected static final String DMN_12 = "org/camunda/bpm/dmn/engine/el/dmn12/FeelIntegrationTest.dmn";
 
@@ -31,6 +39,32 @@ public class ScalaFeelLegacyTest extends DmnEngineTest {
     DefaultDmnEngineConfiguration configuration = new DefaultDmnEngineConfiguration();
     configuration.setFeelEngineFactory(new CamundaFeelEngineFactory());
     return configuration;
+  }
+
+  @Test
+  @DecisionResource(resource = EMPTY_EXPRESSIONS_DMN, decisionKey = "decision2")
+  public void testFailFeelUseOfEmptyInputExpression() {
+    try {
+      evaluateDecisionTable();
+      failBecauseExceptionWasNotThrown(FeelException.class);
+    }
+    catch (FeelException e) {
+      assertThat(e).hasMessageStartingWith("FEEL-01017");
+      assertThat(e).hasMessageContaining("'10'");
+      assertThat(e.getMessage()).doesNotContain("cellInput");
+    }
+  }
+
+  @Test
+  @DecisionResource(resource = FEEL_TEST_DMN)
+  public void testStringVariable() {
+    variables.putValue("stringInput", "camunda");
+    variables.putValue("numberInput", 13.37);
+    variables.putValue("booleanInput", true);
+
+    assertThatDecisionTableResult()
+      .hasSingleResult()
+      .hasSingleEntry(true);
   }
 
 }
