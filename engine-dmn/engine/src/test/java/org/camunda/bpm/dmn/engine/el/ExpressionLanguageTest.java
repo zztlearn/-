@@ -228,9 +228,7 @@ public class ExpressionLanguageTest extends DmnEngineTest {
       failBecauseExceptionWasNotThrown(FeelException.class);
     }
     catch (FeelException e) {
-      assertThat(e).hasMessageStartingWith("FEEL-01017");
-      assertThat(e).hasMessageContaining("'10'");
-      assertThat(e.getMessage()).doesNotContain("cellInput");
+      assertThat(e).hasMessageContaining("FEEL-01017 Unable to evaluate expression '10' as no input is set. Maybe the inputExpression is missing or empty.");
     }
   }
 
