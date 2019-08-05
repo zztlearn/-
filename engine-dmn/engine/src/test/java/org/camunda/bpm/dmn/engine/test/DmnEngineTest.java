@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.camunda.bpm.dmn.engine.DmnDecision;
+import org.camunda.bpm.dmn.engine.DmnDecisionResult;
 import org.camunda.bpm.dmn.engine.DmnDecisionTableResult;
 import org.camunda.bpm.dmn.engine.DmnEngine;
 import org.camunda.bpm.dmn.engine.DmnEngineConfiguration;
@@ -60,6 +61,10 @@ public abstract class DmnEngineTest {
     variables = Variables.createVariables();
   }
 
+  public VariableMap getVariables() {
+    return variables;
+  }
+
   // parsing //////////////////////////////////////////////////////////////////
 
   public List<DmnDecision> parseDecisionsFromFile(String filename) {
@@ -80,6 +85,10 @@ public abstract class DmnEngineTest {
 
   public DmnDecisionTableResult evaluateDecisionTable(DmnEngine engine) {
     return engine.evaluateDecisionTable(decision, variables);
+  }
+
+  public DmnDecisionResult evaluateDecision() {
+    return dmnEngine.evaluateDecision(decision, variables);
   }
 
   // assertions ///////////////////////////////////////////////////////////////

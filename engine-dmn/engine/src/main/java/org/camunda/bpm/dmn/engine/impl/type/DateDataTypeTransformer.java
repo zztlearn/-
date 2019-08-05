@@ -18,6 +18,7 @@ package org.camunda.bpm.dmn.engine.impl.type;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.camunda.bpm.dmn.engine.impl.spi.type.DmnDataTypeTransformer;

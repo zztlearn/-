@@ -192,4 +192,18 @@ public class ScalaFeelLegacyTest extends DmnEngineTest {
     assertThat((String)decisionResult.getSingleEntry()).isEqualTo("a");
   }
 
+  @Ignore("No single quotes support")
+  @Test
+  @DecisionResource(resource = "FeelLegacy_SingleQuotes.dmn")
+  public void shouldUseSingleQuotesInStringLiterals() {
+    DefaultDmnEngineConfiguration configuration = (DefaultDmnEngineConfiguration) getDmnEngineConfiguration();
+    configuration.setDefaultOutputEntryExpressionLanguage(DefaultDmnEngineConfiguration.FEEL_EXPRESSION_LANGUAGE);
+    DmnEngine engine = configuration.buildEngine();
+
+    DmnDecisionResult decisionResult = engine.evaluateDecision(decision,
+      Variables.createVariables().putValue("input", "Hello World"));
+
+    assertThat((String)decisionResult.getSingleEntry()).isEqualTo("foo");
+  }
+
 }
