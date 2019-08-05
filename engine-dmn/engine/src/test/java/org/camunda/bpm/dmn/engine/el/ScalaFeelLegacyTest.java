@@ -19,6 +19,7 @@ package org.camunda.bpm.dmn.engine.el;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.camunda.bpm.dmn.engine.util.DmnExampleVerifier.assertExample;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -103,7 +104,11 @@ public class ScalaFeelLegacyTest extends DmnEngineTest {
     }
   }
 
-  @Ignore("Does not work with Scala FEEL Engine")
+  @Ignore("Does not work with Scala FEEL Engine anymore, "
+      + "Philipp says it's not standard conform with DMN 1.1 "
+      + "to use a built-in function in this input cell and to expect"
+      + "a unary test, you should rather write '? = date and time(dateString)'"
+      + "to indicate a unary test expression")
   @Test
   @DecisionResource(resource = DATE_AND_TIME_DMN)
   public void testDateAndTimeIntegration() {
@@ -115,6 +120,18 @@ public class ScalaFeelLegacyTest extends DmnEngineTest {
     assertThatDecisionTableResult()
       .hasSingleResult()
       .hasSingleEntryTyped(Variables.dateValue(testDate));
+  }
+
+  @Ignore("just a verification that 'equal-to' unary tests on built-in functions "
+      + "don't work with Scala FEEL engine in general")
+  @Test
+  @DecisionResource
+  public void testUnaryTest() {
+    variables.putValue("integerString", "45");
+
+    assertThatDecisionTableResult()
+      .hasSingleResult()
+      .hasSingleEntryTyped(Variables.integerValue(45));
   }
 
   @Test
