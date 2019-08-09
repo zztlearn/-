@@ -32,6 +32,7 @@ import org.camunda.bpm.dmn.engine.test.DmnEngineTest;
 import org.camunda.bpm.dmn.feel.impl.FeelException;
 import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.feel.integration.CamundaFeelEngineFactory;
+import org.camunda.spin.Spin;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -197,11 +198,49 @@ public class ScalaFeelLegacyTest extends DmnEngineTest {
   @DecisionResource(resource = "FeelLegacy_SingleQuotes.dmn")
   public void shouldUseSingleQuotesInStringLiterals() {
     DefaultDmnEngineConfiguration configuration = (DefaultDmnEngineConfiguration) getDmnEngineConfiguration();
-    configuration.setDefaultOutputEntryExpressionLanguage(DefaultDmnEngineConfiguration.FEEL_EXPRESSION_LANGUAGE);
     DmnEngine engine = configuration.buildEngine();
 
     DmnDecisionResult decisionResult = engine.evaluateDecision(decision,
       Variables.createVariables().putValue("input", "Hello World"));
+
+    assertThat((String)decisionResult.getSingleEntry()).isEqualTo("foo");
+  }
+
+  @Ignore("SPIN handling has changed")
+  @Test
+  @DecisionResource(resource = "FeelLegacy_SPIN.dmn")
+  public void shouldHandleSpinCorrectly() {
+    DefaultDmnEngineConfiguration configuration = (DefaultDmnEngineConfiguration) getDmnEngineConfiguration();
+    DmnEngine engine = configuration.buildEngine();
+
+    DmnDecisionResult decisionResult = engine.evaluateDecision(decision,
+        Variables.createVariables()
+            .putValue("foo", Spin.JSON("{ \"foo\": 7}")));
+
+    assertThat((String)decisionResult.getSingleEntry()).isEqualTo("foo");
+  }
+
+  @Test
+  @DecisionResource(resource = "FeelLegacy_SPIN_Context.dmn")
+  public void shouldUseContextConversionForSpinValue() {
+    DefaultDmnEngineConfiguration configuration = (DefaultDmnEngineConfiguration) getDmnEngineConfiguration();
+    DmnEngine engine = configuration.buildEngine();
+
+    DmnDecisionResult decisionResult = engine.evaluateDecision(decision,
+        Variables.createVariables()
+            .putValue("foo", Spin.JSON("{ \"bar\": 7}")));
+
+    assertThat((String)decisionResult.getSingleEntry()).isEqualTo("bar");
+  }
+
+  @Ignore("No equals performed see 'testDateAndTimeIntegration'")
+  @Test
+  @DecisionResource(resource = "FeelLegacy_equals_boolean.dmn")
+  public void shouldEqualBoolean() {
+    DefaultDmnEngineConfiguration configuration = (DefaultDmnEngineConfiguration) getDmnEngineConfiguration();
+    DmnEngine engine = configuration.buildEngine();
+
+    DmnDecisionResult decisionResult = engine.evaluateDecision(decision, Variables.createVariables());
 
     assertThat((String)decisionResult.getSingleEntry()).isEqualTo("foo");
   }

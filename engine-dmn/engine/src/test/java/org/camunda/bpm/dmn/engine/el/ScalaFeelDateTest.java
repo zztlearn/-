@@ -322,6 +322,21 @@ public class ScalaFeelDateTest extends DmnEngineTest {
     assertThat(foo).isEqualTo("bar");
   }
 
+  /**
+   * Fails for FEEL because Java 8 Date is not supported by the DMN engine.
+   */
+  @Test
+  @DecisionResource(resource = "DateConversionTable_OutputClauseDateBuiltinFunction.dmn11.dmn")
+  public void shouldEvaluateOutputClause() {
+    // given
+
+    // when
+    String foo = evaluateDecision().getSingleEntry();
+
+    // then
+    assertThat(foo).isEqualTo("bar");
+  }
+
   @Test
   public void shouldEvaluateDateAndTime_Java() throws ParseException {
     Date dateTime = new SimpleDateFormat("YYYY-MM-DD'T'HH:MM:ss")
@@ -336,7 +351,7 @@ public class ScalaFeelDateTest extends DmnEngineTest {
     assertThat(input).isFalse();
   }
 
-  @Ignore
+  @Ignore("Scala engine add timezone information to util date")
   @Test
   public void shouldEvaluateDateAndTime_Scala() throws ParseException {
     Date dateTime = new SimpleDateFormat("YYYY-MM-DD'T'HH:MM:ss")
