@@ -6,7 +6,7 @@
     </extensionElements>
     <decisionTable id="decisionTable_1">
       <input id="input_1">
-        <inputExpression id="inputExpression_1" typeRef="date">
+        <inputExpression id="inputExpression_1">
           <text>date1</text>
         </inputExpression>
       </input>
