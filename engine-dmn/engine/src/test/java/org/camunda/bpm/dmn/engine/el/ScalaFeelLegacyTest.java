@@ -21,6 +21,8 @@ import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.camunda.bpm.dmn.engine.util.DmnExampleVerifier.assertExample;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import org.camunda.bpm.dmn.engine.DmnDecisionResult;
@@ -243,6 +245,106 @@ public class ScalaFeelLegacyTest extends DmnEngineTest {
     DmnDecisionResult decisionResult = engine.evaluateDecision(decision, Variables.createVariables());
 
     assertThat((String)decisionResult.getSingleEntry()).isEqualTo("foo");
+  }
+
+  @Test
+  @DecisionResource(resource = "FeelLegacy_compareDates_non_typed.dmn")
+  public void shouldCompareDates() {
+    variables.putValue("date1", new Date());
+    variables.putValue("date2", new Date());
+
+    assertThatDecisionTableResult()
+    .hasSingleResult()
+    .hasSingleEntryTyped(Variables.stringValue("foo"));
+  }
+
+  @Test
+  @DecisionResource(resource = "FeelLegacy_compareDates_non_typed.dmn")
+  public void shouldCompareLocalDateTimes() {
+    variables.putValue("date1", LocalDateTime.now());
+    variables.putValue("date2", LocalDateTime.now());
+
+    assertThatDecisionTableResult()
+    .hasSingleResult()
+    .hasSingleEntryTyped(Variables.stringValue("foo"));
+  }
+
+  @Test
+  @DecisionResource(resource = "FeelLegacy_compareDates_non_typed.dmn")
+  public void shouldCompareZonedDateTimes() {
+    variables.putValue("date1", ZonedDateTime.now());
+    variables.putValue("date2", ZonedDateTime.now());
+
+    assertThatDecisionTableResult()
+    .hasSingleResult()
+    .hasSingleEntryTyped(Variables.stringValue("foo"));
+  }
+
+  @Test
+  @DecisionResource(resource = "FeelLegacy_compareDates_non_typed.dmn")
+  public void shouldCompareJodaLocalDateTimes() {
+    variables.putValue("date1", org.joda.time.LocalDateTime.now());
+    variables.putValue("date2", org.joda.time.LocalDateTime.now());
+
+    assertThatDecisionTableResult()
+    .hasSingleResult()
+    .hasSingleEntryTyped(Variables.stringValue("foo"));
+  }
+
+  @Ignore("Scala FEEL engine does not map Joda DateTime values")
+  @Test
+  @DecisionResource(resource = "FeelLegacy_compareDates_non_typed.dmn")
+  public void shouldCompareJodaDateTimes() {
+    variables.putValue("date1", org.joda.time.DateTime.now());
+    variables.putValue("date2", org.joda.time.DateTime.now());
+
+    assertThatDecisionTableResult()
+    .hasSingleResult()
+    .hasSingleEntryTyped(Variables.stringValue("foo"));
+  }
+
+  @Test
+  @DecisionResource(resource = "FeelLegacy_compareDates_non_typed.dmn")
+  public void shouldCompareTypedDateValues() {
+    variables.putValue("date1", Variables.dateValue(new Date()));
+    variables.putValue("date2", Variables.dateValue(new Date()));
+
+    assertThatDecisionTableResult()
+    .hasSingleResult()
+    .hasSingleEntryTyped(Variables.stringValue("foo"));
+  }
+
+  @Test
+  @DecisionResource(resource = "FeelLegacy_compareDate_withTimeZone_non_typed.dmn")
+  public void shouldEvaluateTimezoneComparisonWithDate() {
+    variables.putValue("date1", new Date());
+
+    assertThatDecisionTableResult()
+      .hasSingleResult()
+      .hasSingleEntryTyped(Variables.stringValue("foo"));
+  }
+
+  /**
+   * Works with the Java FEEL engine because it ignores the time zone
+   * when processing the time zoned-String in the expression for the resulting
+   * Java Util Date
+   *
+   * Also works in the Scala FEEL engine because Java Util Dates (the input variable)
+   * get a time zone attached there and the time zone is respected for the expression
+   * string
+   *
+   * THIS MIGHT BREAK when we change the transformation behavior
+   * in the Scala FEEL engine to not attach time zone information to
+   * Java Util Dates
+   */
+  @Test
+  @DecisionResource(resource = "FeelLegacy_compareDate_withTimeZone_non_typed.dmn")
+  public void shouldEvaluateTimezoneComparisonWithTypedValue() {
+    variables.putValue("date1", Variables.dateValue(new Date()));
+
+    assertThatDecisionTableResult()
+      .hasSingleResult()
+      .hasSingleEntryTyped(Variables.stringValue("foo"));
   }
 
 }

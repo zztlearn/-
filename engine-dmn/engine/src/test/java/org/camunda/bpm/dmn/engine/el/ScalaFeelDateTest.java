@@ -23,6 +23,7 @@ import org.camunda.bpm.dmn.engine.test.DmnEngineTest;
 import org.camunda.bpm.dmn.feel.impl.FeelEngine;
 import org.camunda.bpm.dmn.feel.impl.juel.FeelEngineFactoryImpl;
 import org.camunda.bpm.engine.variable.VariableMap;
+import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.feel.integration.CamundaFeelEngine;
 import org.camunda.feel.integration.CamundaFeelEngineFactory;
 import org.junit.Before;
@@ -32,6 +33,7 @@ import org.junit.Test;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -119,6 +121,16 @@ public class ScalaFeelDateTest extends DmnEngineTest {
 
     // then
     assertThat(foo).isEqualTo("not ok");
+  }
+
+  @Test
+  @DecisionResource(resource = "FeelLegacy_compareDate_withTimeZone_non_typed.dmn")
+  public void shouldEvaluateTimezoneComparisonWithZonedDateTime() {
+    variables.putValue("date1", ZonedDateTime.now());
+
+    assertThatDecisionTableResult()
+      .hasSingleResult()
+      .hasSingleEntryTyped(Variables.stringValue("foo"));
   }
 
   @Ignore("Java FEEL Engine cannot handle Java 8 Date")
