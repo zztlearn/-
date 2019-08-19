@@ -23,6 +23,7 @@ import java.util.Properties;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
+import org.camunda.bpm.dmn.engine.impl.DefaultDmnEngineConfiguration;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.ProcessEngineConfiguration;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
@@ -31,6 +32,7 @@ import org.camunda.bpm.engine.impl.cfg.StandaloneProcessEngineConfiguration;
 import org.camunda.bpm.engine.impl.util.IoUtil;
 import org.camunda.bpm.engine.impl.util.ReflectUtil;
 import org.camunda.bpm.qa.performance.engine.framework.PerfTestException;
+import org.camunda.feel.integration.CamundaFeelEngineFactory;
 
 /**
  * @author Daniel Meyer
@@ -64,6 +66,11 @@ public class PerfTestProcessEngine {
 
     processEngineConfiguration.setJdbcBatchProcessing(Boolean.valueOf(properties.getProperty("jdbcBatchProcessing")));
 
+    //DefaultDmnEngineConfiguration dmnEngineConfiguration = new DefaultDmnEngineConfiguration();
+    //dmnEngineConfiguration.setFeelEngineFactory(new CamundaFeelEngineFactory());
+    //dmnEngineConfiguration.setDefaultInputEntryExpressionLanguage("feel-scala-unary-tests");
+    //dmnEngineConfiguration.setDefaultInputExpressionExpressionLanguage("feel-scala");
+    //processEngineConfiguration.setDmnEngineConfiguration(dmnEngineConfiguration);
     // load plugins
     String processEnginePlugins = properties.getProperty("processEnginePlugins", "");
     for (String pluginName : processEnginePlugins.split(",")) {
