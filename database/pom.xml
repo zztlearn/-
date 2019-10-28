@@ -63,6 +63,12 @@
         <artifactId>ojdbc8</artifactId>
         <version>${version.oracle}</version>
       </dependency>
+      <!-- Oracle-published driver -->
+      <dependency>
+        <groupId>com.oracle.ojdbc</groupId>
+        <artifactId>ojdbc8</artifactId>
+        <version>${version.oracle}</version>
+      </dependency>
       <dependency>
         <groupId>com.oracle.jdbc</groupId>
         <artifactId>ojdbc14</artifactId>
@@ -468,7 +474,7 @@
       </properties>
       <dependencies>
         <dependency>
-          <groupId>com.oracle.ojdbc</groupId>
+          <groupId>com.oracle.jdbc</groupId>
           <artifactId>ojdbc8</artifactId>
           <scope>test</scope>
         </dependency>
