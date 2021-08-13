@@ -35,7 +35,7 @@
     <version.mockito>1.9.5</version.mockito>
 
     <version.commonj>1.1.0</version.commonj>
-    <version.bouncycastle>1.47</version.bouncycastle>
+    <version.bouncycastle>1.67</version.bouncycastle>
 
     <!-- application servers -->
     <version.jboss.as>7.2.0.Final</version.jboss.as>
